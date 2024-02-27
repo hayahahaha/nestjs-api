@@ -2,18 +2,18 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
-import { RoomsModule } from './rooms/rooms.module';
 import { ParticipantsModule } from './participants/participants.module';
 import { MessagesModule } from './messages/messages.module';
 import { DatabaseModule } from './database.module';
 import * as Joi from '@hapi/joi';
-import {ConfigModule} from '@nestjs/config'
+import { ConfigModule } from '@nestjs/config';
+import { ServersModule } from './servers/servers.module';
+import { ChannelsModule } from './channels/channels.module';
 
 @Module({
   imports: [
-    UsersModule, 
-    RoomsModule, 
-    ParticipantsModule, 
+    UsersModule,
+    ParticipantsModule,
     MessagesModule,
     ConfigModule.forRoot({
       validationSchema: Joi.object({
@@ -23,9 +23,11 @@ import {ConfigModule} from '@nestjs/config'
         POSTGRES_PASSWORD: Joi.string().required(),
         POSTGRES_DB: Joi.string().required(),
         PORT: Joi.number(),
-      })
+      }),
     }),
     DatabaseModule,
+    ServersModule,
+    ChannelsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
