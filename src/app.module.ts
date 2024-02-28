@@ -1,17 +1,17 @@
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { UsersModule } from './users/users.module';
-import { ParticipantsModule } from './participants/participants.module';
-import { MessagesModule } from './messages/messages.module';
-import { DatabaseModule } from './database.module';
 import * as Joi from '@hapi/joi';
+import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { ServersModule } from './servers/servers.module';
+import { AuthenticationModule } from './authentication/authentication.module';
 import { ChannelsModule } from './channels/channels.module';
+import { DatabaseModule } from './database.module';
+import { MessagesModule } from './messages/messages.module';
+import { ParticipantsModule } from './participants/participants.module';
+import { ServersModule } from './servers/servers.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
+    AuthenticationModule,
     UsersModule,
     ParticipantsModule,
     MessagesModule,
@@ -29,7 +29,7 @@ import { ChannelsModule } from './channels/channels.module';
     ServersModule,
     ChannelsModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
