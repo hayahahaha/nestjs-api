@@ -10,7 +10,7 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-  ) { }
+  ) {}
 
   async create(userData: CreateUserDto) {
     const newUser = this.usersRepository.create(userData);
@@ -28,6 +28,19 @@ export class UsersService {
     });
   }
 
+  async findById(id: number) {
+    const user = this.usersRepository.findOneBy({
+      id: id,
+    });
+    if (!user) {
+      throw new HttpException(
+        'User with this id does not exist',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    return user;
+  }
+
   async findByEmail(email: string) {
     const user = this.usersRepository.findOneBy({
       email: email,
@@ -43,16 +56,19 @@ export class UsersService {
 
   async update(id: number, userData: UpdateUserDto) {
     const user = this.usersRepository.findOneBy({
-      id: id
-    })
+      id: id,
+    });
 
     if (!user) {
-      throw new HttpException('user with this id does not exist', HttpStatus.NOT_FOUND)
+      throw new HttpException(
+        'user with this id does not exist',
+        HttpStatus.NOT_FOUND,
+      );
     }
-    const updatedUser = await this.usersRepository.update(id, userData)
 
-    return updateUser
+    const updatedUser = await this.usersRepository.update(id, userData);
 
+    return updatedUser;
   }
 
   remove(id: number) {
