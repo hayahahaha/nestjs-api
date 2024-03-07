@@ -12,10 +12,11 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthenticationGuard } from 'src/authentication/jwt-authentication.guard';
+import { FindOneParams } from 'src/utils/findOneParams';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
@@ -29,8 +30,9 @@ export class UsersController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+  findOne(@Param() { id }: FindOneParams) {
+    if (Number(id))
+      return this.usersService.findOne(+id);
   }
 
   @Patch(':id')
