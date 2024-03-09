@@ -6,7 +6,7 @@ import {
   Req,
   Res,
   UseGuards,
-  SerializeOptions
+  SerializeOptions,
 } from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
 import { RegisterDto } from './dto/register.dto';
@@ -17,10 +17,10 @@ import { Response } from 'express';
 
 @Controller('authentication')
 @SerializeOptions({
-  strategy: 'excludeAll'
+  strategy: 'excludeAll',
 })
 export class AuthenticationController {
-  constructor(private readonly authenticationService: AuthenticationService) { }
+  constructor(private readonly authenticationService: AuthenticationService) {}
 
   @Post('register')
   async register(@Body() registrationDto: RegisterDto) {

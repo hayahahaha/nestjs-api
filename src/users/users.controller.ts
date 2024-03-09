@@ -19,7 +19,7 @@ import { ClassSerializerInterceptor } from '@nestjs/common';
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor)
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService) {}
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
@@ -34,8 +34,7 @@ export class UsersController {
 
   @Get(':id')
   findOne(@Param() { id }: FindOneParams) {
-    if (Number(id))
-      return this.usersService.findOne(+id);
+    if (Number(id)) return this.usersService.findOne(+id);
   }
 
   @Patch(':id')
