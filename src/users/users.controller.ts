@@ -13,10 +13,13 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthenticationGuard } from 'src/authentication/jwt-authentication.guard';
 import { FindOneParams } from 'src/utils/findOneParams';
+import { UseInterceptors } from '@nestjs/common';
+import { ClassSerializerInterceptor } from '@nestjs/common';
 
 @Controller('users')
+@UseInterceptors(ClassSerializerInterceptor)
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService) {}
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
@@ -31,8 +34,7 @@ export class UsersController {
 
   @Get(':id')
   findOne(@Param() { id }: FindOneParams) {
-    if (Number(id))
-      return this.usersService.findOne(+id);
+    if (Number(id)) return this.usersService.findOne(+id);
   }
 
   @Patch(':id')
