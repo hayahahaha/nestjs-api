@@ -13,8 +13,11 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthenticationGuard } from 'src/authentication/jwt-authentication.guard';
 import { FindOneParams } from 'src/utils/findOneParams';
+import { UseInterceptors } from '@nestjs/common';
+import { ClassSerializerInterceptor } from '@nestjs/common';
 
 @Controller('users')
+@UseInterceptors(ClassSerializerInterceptor)
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
 
