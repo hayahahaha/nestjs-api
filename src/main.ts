@@ -9,7 +9,6 @@ async function bootstrap() {
 
   const { httpAdapter } = app.get(HttpAdapterHost);
   app.useGlobalFilters(new ExceptionsLoggerFitler(httpAdapter));
-  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
   app.use(cookieParser());
   await app.listen(3000);
