@@ -2,8 +2,8 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { PostgresErrorCode } from 'src/database/postgresErrorCodes.enum';
-import { UsersService } from 'src/users/users.service';
+import { PostgresErrorCode } from '..//database/postgresErrorCodes.enum';
+import { UsersService } from '../users/users.service';
 import { RegisterDto } from './dto/register.dto';
 
 @Injectable()
@@ -12,7 +12,7 @@ export class AuthenticationService {
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
-  ) {}
+  ) { }
 
   async register(registerData: RegisterDto) {
     try {

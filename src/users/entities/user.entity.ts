@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { Address } from './address.entity';
+import { PublicFile } from '../../files/publicFile.entity'
 
 @Entity()
 export class User {
@@ -26,4 +27,12 @@ export class User {
   })
   @JoinColumn()
   address: Address;
+
+
+  @JoinColumn()
+  @OneToOne(() => PublicFile, {
+    eager: true,
+    nullable: true
+  })
+  public avatar?: PublicFile
 }
