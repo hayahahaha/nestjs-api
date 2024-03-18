@@ -4,12 +4,15 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
+import { FilesService } from '../files/files.services'
+import { throws } from 'assert';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    private filesService: FilesService,
   ) { }
 
   async create(userData: CreateUserDto) {
@@ -88,5 +91,26 @@ export class UsersService {
 
   remove(id: number) {
     return `This action removes a #${id} user`;
+  }
+
+  async addAvatar(userId: number, imageBuffer: Buffer, filename: string) {
+    const avatar = await this.filesService.uploadPublicFile(imageBuffer, filename)
+
+    const user = await this.usersRepository.findOneBy({
+      id: userId
+    })
+
+    if (!user) {
+      throw new HttpException(
+        'user with this id does not exist',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    await this.usersRepository.update(userId, {
+      avatar: avatar
+    })
+
+    return avatar
   }
 }
