@@ -5,7 +5,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { FilesService } from '../files/files.services'
-import { throws } from 'assert';
 
 @Injectable()
 export class UsersService {
@@ -96,9 +95,7 @@ export class UsersService {
   async addAvatar(userId: number, imageBuffer: Buffer, filename: string) {
     const avatar = await this.filesService.uploadPublicFile(imageBuffer, filename)
 
-    const user = await this.usersRepository.findOneBy({
-      id: userId
-    })
+    const user = await this.findById(userId)
 
     if (!user) {
       throw new HttpException(
@@ -107,10 +104,30 @@ export class UsersService {
       );
     }
 
+    if (user.avatar) {
+      await this.usersRepository.update(userId, {
+        avatar: null
+      })
+      await this.filesService.deletePublic(user.avatar.id)
+    }
+
     await this.usersRepository.update(userId, {
       avatar: avatar
     })
 
     return avatar
   }
+
+  async deleteAvatar(userId: number) {
+    const user = await this.findById(userId);
+    const fileId = user.avatar.id
+    if (fileId) {
+      await this.usersRepository.update(userId, {
+        avatar: null
+      })
+      await this.filesService.deletePublic(fileId);
+    }
+
+  }
+
 }
