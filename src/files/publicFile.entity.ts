@@ -3,7 +3,7 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
 @Entity()
 export class PublicFile {
   @PrimaryGeneratedColumn()
-  public id: string
+  public id: number
 
   @Column()
   public url: string

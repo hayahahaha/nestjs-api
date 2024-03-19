@@ -20,7 +20,7 @@ import { Response } from 'express';
   strategy: 'excludeAll',
 })
 export class AuthenticationController {
-  constructor(private readonly authenticationService: AuthenticationService) {}
+  constructor(private readonly authenticationService: AuthenticationService) { }
 
   @Post('register')
   async register(@Body() registrationDto: RegisterDto) {
