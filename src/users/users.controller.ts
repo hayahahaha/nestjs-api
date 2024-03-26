@@ -1,4 +1,5 @@
 import {
+  Query,
   Controller,
   Get,
   Post,
@@ -28,10 +29,15 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
+
   @Get()
   @UseGuards(JwtAuthenticationGuard)
-  findAll() {
-    return this.usersService.findAll();
+  findAll(@Query('search') search: string) {
+    if (search) {
+      return this.usersService.searchUser(search);
+    }
+
+    return this.usersService.findAll()
   }
 
   @Get(':id')
