@@ -5,18 +5,21 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { FilesService } from '../files/files.services'
+import { UserSearchService } from './userSearch.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    private userSearchService: UserSearchService,
     private filesService: FilesService,
   ) { }
 
   async create(userData: CreateUserDto) {
     const newUser = this.usersRepository.create(userData);
     await this.usersRepository.save(newUser);
+    await this.userSearchService.indexUser(newUser)
     return newUser;
   }
 
@@ -84,12 +87,21 @@ export class UsersService {
     }
 
     const updatedUser = await this.usersRepository.update(id, userData);
-
-    return updatedUser;
+    if (updatedUser) {
+      await this.userSearchService.update(updatedUser)
+      return updatedUser;
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: number) {
+    const deleteResponse = await this.usersRepository.delete(id);
+    if (!deleteResponse.affected) {
+      throw new HttpException(
+        'user with this id does not exist',
+        HttpStatus.NOT_FOUND
+      )
+    }
+    await this.userSearchService.remove(id)
   }
 
   async addAvatar(userId: number, imageBuffer: Buffer, filename: string) {
@@ -128,6 +140,10 @@ export class UsersService {
       await this.filesService.deletePublic(fileId);
     }
 
+  }
+
+  searchUser(text: string) {
+    return this.userSearchService.searchUser(text)
   }
 
 }
