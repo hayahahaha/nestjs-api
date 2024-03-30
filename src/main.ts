@@ -10,13 +10,13 @@ async function bootstrap() {
   const { httpAdapter } = app.get(HttpAdapterHost);
   app.useGlobalFilters(new ExceptionsLoggerFitler(httpAdapter));
 
-  const configService = app.get(ConfigService)
+  const configService = app.get(ConfigService);
 
   config.update({
     accessKeyId: configService.get('AWS_ACCESS_KEY_ID'),
     secretAccessKey: configService.get('AWS_SECRET_ACCESS_KEY'),
     region: configService.get('AWS_REGION'),
-  })
+  });
 
   app.use(cookieParser());
   await app.listen(3000);
