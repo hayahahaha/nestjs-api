@@ -8,17 +8,15 @@ import { FileModule } from 'src/files/file.modules';
 import { UserSearchService } from './userSearch.service';
 import { SearchModule } from './../search/search.module';
 
-
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
     ConfigModule,
     FileModule,
-    SearchModule
+    SearchModule,
   ],
   controllers: [UsersController],
   providers: [UsersService, UserSearchService],
   exports: [UsersService, UserSearchService],
 })
-
-export class UsersModule { }
+export class UsersModule {}

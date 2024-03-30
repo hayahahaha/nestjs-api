@@ -3,7 +3,8 @@ import {
   Controller,
   Get,
   Post,
-  Body, Patch,
+  Body,
+  Patch,
   UploadedFile,
   Param,
   Delete,
@@ -17,18 +18,17 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthenticationGuard } from '../authentication/jwt-authentication.guard';
 import { FindOneParams } from '../utils/findOneParams';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Express } from 'express'
-import RequestWithUser from '../authentication/requestWithUser.interface'
+import { Express } from 'express';
+import RequestWithUser from '../authentication/requestWithUser.interface';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService) {}
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
-
 
   @Get()
   @UseGuards(JwtAuthenticationGuard)
@@ -37,7 +37,7 @@ export class UsersController {
       return this.usersService.searchUser(search);
     }
 
-    return this.usersService.findAll()
+    return this.usersService.findAll();
   }
 
   @Get(':id')
@@ -60,7 +60,12 @@ export class UsersController {
   @UseInterceptors(FileInterceptor('file'))
   async addAvatar(
     @Req() request: RequestWithUser,
-    @UploadedFile() file: Express.Multer.File) {
-    return this.usersService.addAvatar(request.user.id, file.buffer, file.originalname)
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.usersService.addAvatar(
+      request.user.id,
+      file.buffer,
+      file.originalname,
+    );
   }
 }

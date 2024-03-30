@@ -5,6 +5,7 @@ import { UserSearchBody } from './types/userSearchBody.interface'
 import { UserSearchResult } from './types/userSearchResult.interface'
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserSearchService {
@@ -26,7 +27,7 @@ export class UserSearchService {
   }
 
   async searchUser(text: string) {
-    const {body} = await this.elasticsearchService.search<UserSearchResult>({
+    const { body } = await this.elasticsearchService.search<UserSearchResult>({
       index: this.index,
       body: {
         query: {
@@ -56,7 +57,7 @@ export class UserSearchService {
   }
 
   async update(user: User) {
-    const newBody= {
+    const newBody = {
       id: user.id,
       email: user.email,
     }
@@ -64,7 +65,7 @@ export class UserSearchService {
     const script = Object.entries(newBody).reduce((result, [key, value]) => {
       return `${result} ctx._source.${key}='${value}';`;
     }, '');
- 
+
     return this.elasticsearchService.updateByQuery({
       index: this.index,
       body: {
