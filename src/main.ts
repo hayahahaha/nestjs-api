@@ -6,7 +6,10 @@ import { ConfigService } from '@nestjs/config';
 import { config } from 'aws-sdk';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    cors: { credentials: true, origin: true },
+  });
+
   const { httpAdapter } = app.get(HttpAdapterHost);
   app.useGlobalFilters(new ExceptionsLoggerFitler(httpAdapter));
 
@@ -19,7 +22,7 @@ async function bootstrap() {
   });
 
   app.use(cookieParser());
-  await app.listen(3000);
+  await app.listen(configService.get('PORT'));
 }
 
 bootstrap();
