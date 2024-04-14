@@ -11,6 +11,7 @@ import * as bcrypt from 'bcrypt';
 import { PostgresErrorCode } from '..//database/postgresErrorCodes.enum';
 import { UsersService } from '../users/users.service';
 import { RegisterDto } from './dto/register.dto';
+import TokenPayload from './tokenPayload.interface';
 
 @Injectable()
 export class AuthenticationService {
@@ -44,12 +45,12 @@ export class AuthenticationService {
     }
   }
 
-  async getAuthenticatedUser(email: string, password: string) {
+  public async getAuthenticatedUser(email: string, plainTextPassword: string) {
     try {
-      const user = await this.usersService.findByEmail(email);
-      this.verifyPassword(password, user.password);
-
+      const user = await this.usersService.getByEmail(email);
+      await this.verifyPassword(plainTextPassword, user.password);
       user.password = undefined;
+
       return user;
     } catch (error) {
       throw new HttpException(
